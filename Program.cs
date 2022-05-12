@@ -1,34 +1,58 @@
+using System.Security.Claims;
+using Microsoft.AspNetCore.Authentication.Certificate;
+using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+//builder.Services.Configure<KestrelServerOptions>(options =>
+//{
+//    options.ConfigureHttpsDefaults(options =>
+//        options.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
+//});
+
+builder.Services.AddAuthentication(
+        CertificateAuthenticationDefaults.AuthenticationScheme)
+    .AddCertificate(options =>
+    {
+        options.Events = new CertificateAuthenticationEvents
+        {
+            OnAuthenticationFailed = context =>
+              {
+                  return Task.CompletedTask;
+              },
+
+            OnCertificateValidated = context =>
+            {
+                var claims = new[]
+                {
+                    new Claim(
+                        ClaimTypes.NameIdentifier,
+                        context.ClientCertificate.Subject,
+                        ClaimValueTypes.String, context.Options.ClaimsIssuer),
+                    new Claim(
+                        ClaimTypes.Name,
+                        context.ClientCertificate.Subject,
+                        ClaimValueTypes.String, context.Options.ClaimsIssuer)
+                };
+
+                context.Principal = new ClaimsPrincipal(
+                    new ClaimsIdentity(claims, context.Scheme.Name));
+                context.Success();
+
+                return Task.CompletedTask;
+            }
+        };
+    });
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
+app.UseAuthentication();
 
-app.UseHttpsRedirection();
+app.MapGet("/", () => "Hello World2!");
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+app.MapGet("/anon", () => "Anon endpoint2").AllowAnonymous();
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast = Enumerable.Range(1, 5).Select(index =>
-       new WeatherForecast
-       (
-           DateTime.Now.AddDays(index),
-           Random.Shared.Next(-20, 55),
-           summaries[Random.Shared.Next(summaries.Length)]
-       ))
-        .ToArray();
-    return forecast;
-});
+app.MapGet("/auth", () => "This endpoint requires authorization").RequireAuthorization();
 
 app.Run();
-
-internal record WeatherForecast(DateTime Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
