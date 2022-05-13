@@ -44,13 +44,9 @@ sudo chown -R www-data:www-data /var/www
 sudo chmod +x /var/www
 
 ### OTHER
-## kesrel.sevice needs to be copied by now from filezilla
-## /etc/systemd/system/kestrel.service
-
-
 
 # auto start on machine reboot
-# sudo systemctl enable kestrel.service
+sudo systemctl enable kestrel.service
 
 # logs are in /var/log/syslog
 # look for dotnet-api
@@ -59,4 +55,4 @@ sudo chmod +x /var/www
 # rename the machine
 sudo hostnamectl set-hostname api-security-test
 
-# sudo reboot now
+sudo reboot now
