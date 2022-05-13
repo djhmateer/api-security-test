@@ -8,7 +8,8 @@
 # need nopasswd enabled
 # https://superuser.com/questions/138893/scp-to-remote-server-with-sudo
 # copy secrets onto machine
-rsync -e 'ssh -p 31' --rsync-path="sudo rsync" secrets/kestrel.service  dave@pfsense:/etc/systemd/system/kestrel.service
+
+# rsync -e 'ssh -p 31' --rsync-path="sudo rsync" secrets/kestrel.service  dave@pfsense:/etc/systemd/system/kestrel.service
 
 # connect to the VM
 # ssh pfsense -p 30 
