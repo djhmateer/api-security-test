@@ -8,7 +8,7 @@
 # connect to the VM
 # ssh pfsense -p 30 
 
-# https://github.com/djhmateer/api-security-test/settings ;  sudo chmod +x ~/api-security-test/infra/server-build.sh ; ./api-security-test/infra/server-build.sh
+# git clone https://github.com/djhmateer/api-security-test ; sudo chmod +x ~/api-security-test/infra/server-build.sh ; ./api-security-test/infra/server-build.sh
 
 # Use Filezilla to copy secrets 
 
