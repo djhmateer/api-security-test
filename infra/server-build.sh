@@ -5,12 +5,15 @@
 # Create a clean VM
 # Proxmox, shutdown VM, backup, restore
 
+# need nopasswd enabled
+# https://superuser.com/questions/138893/scp-to-remote-server-with-sudo
+# copy secrets onto machine
+rsync -e 'ssh -p 31' --rsync-path="sudo rsync" secrets/kestrel.service  dave@pfsense:/etc/systemd/system/kestrel.service
+
 # connect to the VM
 # ssh pfsense -p 30 
 
 # git clone https://github.com/djhmateer/api-security-test ; sudo chmod +x ~/api-security-test/infra/server-build.sh ; ./api-security-test/infra/server-build.sh
-
-# Use Filezilla to copy secrets 
 
 sudo apt update -y
 sudo apt upgrade -y
@@ -27,7 +30,7 @@ sudo apt-get update; \
   sudo apt-get install -y dotnet-sdk-6.0
 
 # root for webapi
-mkdir /var/www
+# sudo mkdir /var/www
 
 cd /home/dave/api-security-test
 
@@ -48,6 +51,11 @@ sudo chmod +x /var/www
 # auto start on machine reboot
 # sudo systemctl enable kestrel.service
 
+# logs are in /var/log/syslog
+# look for dotnet-api
 
+
+# rename the machine
+sudo hostnamectl set-hostname api-security-test
 
 # sudo reboot now
