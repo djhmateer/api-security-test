@@ -17,28 +17,16 @@ REMOTE=$(git rev-parse @{u});
 
 #if our local revision id doesn't match the remote, we will need to pull the changes
 if [ $LOCAL != $REMOTE ]; then
-    #pull and merge changes
+    echo "pulled new code and merging"
     git pull origin master;
 
-    echo "pulled new code"
-
-    # move to home for safety
-    cd ~
-
-    # stop kestrel
+    echo "stopping kestrel"
     sudo systemctl stop kestrel.service
-
-    echo "publishing"
 
     sudo dotnet publish /home/dave/api-security-test/ --configuration Release --output /var/www
 
-    echo "starting"
-    # start kestrel
-
-    sudo systemctl start  kestrel.service
-
-    #sudo service nginx stop
-
+    echo "starting kestrel"
+    sudo systemctl start kestrel.service
 fi
 sleep 5
 done
