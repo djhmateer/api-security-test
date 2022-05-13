@@ -8,29 +8,46 @@
 # connect to the VM
 # ssh pfsense -p 30 
 
-# git clone https://github.com/djhmateer/auto-archiver ;  sudo chmod +x ~/auto-archiver/infra/server-build.sh ; ./auto-archiver/infra/server-build.sh
+# https://github.com/djhmateer/api-security-test/settings ;  sudo chmod +x ~/api-security-test/infra/server-build.sh ; ./api-security-test/infra/server-build.sh
 
 # Use Filezilla to copy secrets 
 
 sudo apt update -y
 sudo apt upgrade -y
 
+# Install packages for .NET for Ubutu 20.04 LTS
 wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
 sudo dpkg -i packages-microsoft-prod.deb
 rm packages-microsoft-prod.deb
 
-## Install .NET Runtime
-## This is the SDK
+## Install .NET SDK  as we're doing a build
 sudo apt-get update; \
   sudo apt-get install -y apt-transport-https && \
   sudo apt-get update && \
   sudo apt-get install -y dotnet-sdk-6.0
 
-cd /home/dave
+# root for webapi
+mkdir /var/www
+
+cd /home/dave/api-security-test
+
+# compile and publish the webapp
+sudo dotnet publish /home/dave/api-security-test/ --configuration Release --output /var/www
+
+# change ownership of the published files to what it will run under
+sudo chown -R www-data:www-data /var/www
+# allow exective permissions
+sudo chmod +x /var/www
+
+### OTHER
+## kesrel.sevice needs to be copied by now from filezilla
+## /etc/systemd/system/kestrel.service
 
 
 
-# **USE same strategy as https://osr4rightstools.org/
-# cron to restart app
+# auto start on machine reboot
+# sudo systemctl enable kestrel.service
 
-sudo reboot now
+
+
+# sudo reboot now
