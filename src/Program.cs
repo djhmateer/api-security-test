@@ -37,8 +37,8 @@ async Task<IResult> Handler2(Todo todo, TodoDb db)
     var foo = new Todo() { Id = 7, IsComplete = true, Name = "Foo" };
 
     // Decides the IResult implementation
-    //return Results.Created($"/todoitems/{todo.Id}", todo);
-    return Results.Created($"/todoitems/9", foo);
+    return Results.Created($"/todoitems/{todo.Id}", todo);
+    //return Results.Created($"/todoitems/9", foo);
 }
 
 app.Run();
