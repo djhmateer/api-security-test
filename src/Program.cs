@@ -6,17 +6,18 @@ builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList")
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
-//app.MapGet("/", () => "Hello World12");
 string Handler1()
 {
     var foo = new Todo() { Id = 7, IsComplete = true, Name = "Foo" };
     var jsonFoo = JsonSerializer.Serialize(foo);
-    return jsonFoo;
-
+    //return jsonFoo;
     //return "Hello World12";
 }
 
-app.MapGet("/", Handler1);
+//app.MapGet("/", Handler1);
+app.MapGet("/", () =>
+   new { Message = "hello world from object" }
+);
 
 //app.MapPost("/todoitems", async (Todo todo, TodoDb db) =>
 //{
@@ -26,7 +27,7 @@ app.MapGet("/", Handler1);
 //    return Results.Created($"/todoitems/{todo.Id}", todo);
 //});
 
-async Task<IResult> Handler(Todo todo, TodoDb db)
+async Task<IResult> Handler2(Todo todo, TodoDb db)
 {
     db.Todos.Add(todo);
     await db.SaveChangesAsync();
@@ -41,7 +42,7 @@ async Task<IResult> Handler(Todo todo, TodoDb db)
     return Results.Created($"/todoitems/9", jsonFoo);
 }
 
-app.MapPost("/todoitems", Handler);
+app.MapPost("/todoitems", Handler2);
 
 app.Run();
 
