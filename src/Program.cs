@@ -6,7 +6,16 @@ builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList")
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
-app.MapGet("/", () => "Hello World12");
+//app.MapGet("/", () => "Hello World12");
+string Handler1()
+{
+    var foo = new Todo() { Id = 7, IsComplete = true, Name = "Foo" };
+    var jsonFoo = JsonSerializer.Serialize(foo);
+
+    return "Hello World12";
+}
+
+app.MapGet("/", Handler1);
 
 //app.MapPost("/todoitems", async (Todo todo, TodoDb db) =>
 //{
