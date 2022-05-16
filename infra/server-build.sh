@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # Proxmox, shutdown VM, backup, restore
+# make sure CPU type is host
 
 # rsync -e 'ssh -p 31' --rsync-path="sudo rsync" secrets/kestrel.service  dave@pfsense:/etc/systemd/system/kestrel.service
 
@@ -10,6 +11,48 @@
 
 sudo apt update -y
 sudo apt upgrade -y
+
+# **Hatespeech**
+# copied from osr4rightstools 2hatespeechinfracreateimage
+
+sudo apt install python3-pip -y
+export PATH=/home/dave/.local/bin:$PATH
+
+pip3 install numpy
+pip3 install nltk
+pip3 install pandas
+pip3 install keras
+pip3 install testresources
+pip3 install tensorflow
+pip3 install scikit-learn
+pip3 install preprocessor
+pip3 install textblob
+pip3 install transformers
+
+pip3 install sentencepiece
+
+# warnings but I think okay
+python3 -m nltk.downloader stopwords
+python3 -m nltk.downloader punkt
+
+python3 -m textblob.download_corpora
+
+sudo apt install unzip -y
+
+# Hatespeech source
+sudo git clone https://github.com/khered20/Prepared_HateSpeech_Models /home/dave/hatespeech
+
+sudo chown -R dave:dave /home/dave/hatespeech 
+sudo chmod +x /home/dave/hatespeech
+
+# # Prepared model
+cd /home/dave/hatespeech
+wget https://functionsdm2storage.blob.core.windows.net/outputfiles/_all_train_results-20210712T152424Z-001.zip
+
+unzip _all_train_results-20210712T152424Z-001.zip -d /home/dave/hatespeech
+
+
+# **API**
 
 # Install packages for .NET for Ubutu 20.04 LTS
 wget https://packages.microsoft.com/config/ubuntu/20.04/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
@@ -31,6 +74,8 @@ sudo chown -R www-data:www-data /var/www
 # allow exective permissions
 sudo chmod +x /var/www
 
+# for test this is a useful script to keep up to date with GH
+sudo chmod +x /home/dave/api-security-test/infra/github-update.sh
 
 # auto start on machine reboot
 sudo systemctl enable kestrel.service
