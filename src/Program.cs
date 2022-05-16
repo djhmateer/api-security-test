@@ -22,6 +22,7 @@ async Task<IResult> Handler(Todo todo, TodoDb db)
 
     var foo = "bar";
 
+    return Results.Created($"/todoitems/{todo.Id}", todo);
     return Results.Created($"/todoitems/{todo.Id}", foo);
 }
 
