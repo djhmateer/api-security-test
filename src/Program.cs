@@ -46,7 +46,7 @@ async Task<IResult> Handler3(HSDto hsdto)
     // Text
     // hatespeech sample text (need to escape commas)
     //string path = @"c:\temp\MyTest.txt";
-    string path = @"/home/dave/hatespeech/input.csv";
+    string path = @"/home/dave/hatespeech/temp/input.csv";
     if (!File.Exists(path))
     {
         // Create a file to write to.
