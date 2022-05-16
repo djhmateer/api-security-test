@@ -6,7 +6,8 @@ builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList")
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
-app.MapGet("/textget", () => 
+app.MapGet("/textget", () =>
+    // returns a 200
     "hello from textget"
 );
 
@@ -17,14 +18,9 @@ app.MapGet("/jsonget", () =>
 );
 
 
-//app.MapPost("/todoitems", async (Todo todo, TodoDb db) =>
-//{
-//    db.Todos.Add(todo);
-//    await db.SaveChangesAsync();
-
-//    return Results.Created($"/todoitems/{todo.Id}", todo);
-//});
-
+// https://docs.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-6.0&tabs=visual-studio
+// accepts a POST
+// and will deserialise a Todo item
 app.MapPost("/todoitems", Handler2);
 async Task<IResult> Handler2(Todo todo, TodoDb db)
 {
@@ -37,9 +33,26 @@ async Task<IResult> Handler2(Todo todo, TodoDb db)
     var foo = new Todo() { Id = 7, IsComplete = true, Name = "Foo" };
 
     // Decides the IResult implementation
+    // returns a 201 Created
     return Results.Created($"/todoitems/{todo.Id}", todo);
-    //return Results.Created($"/todoitems/9", foo);
 }
+
+app.MapPost("/hs", Handler3);
+async Task<IResult> Handler3(Todo todo, TodoDb db)
+{
+    db.Todos.Add(todo);
+    await db.SaveChangesAsync();
+
+    // Newtonsoft.Json
+    // System.Text.Json.Serialization
+
+    var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS" };
+
+    // Decides the IResult implementation
+    // returns a 201 Created
+    return Results.Created($"/todoitems/{todo.Id}", todo);
+}
+
 
 app.Run();
 
