@@ -40,7 +40,27 @@ async Task<IResult> Handler2(Todo todo, TodoDb db)
 app.MapPost("/hs", Handler3);
 async Task<IResult> Handler3(HSDto hsdto)
 {
-    var rnd = new Random().Next(1,10);
+    var rnd = new Random().Next(1, 10);
+
+    // write a text file
+    // Text
+    // hatespeech sample text (need to escape commas)
+    //string path = @"c:\temp\MyTest.txt";
+    string path = @"/home/dave/hatespeech/input.csv";
+    if (!File.Exists(path))
+    {
+        // Create a file to write to.
+        using (StreamWriter sw = File.CreateText(path))
+        {
+            sw.WriteLine("Text");
+            sw.WriteLine("hatespeech sample text");
+        }
+    }
+
+    // call the python script here
+    // python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results
+
+
 
     //var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS2" };
     var foo = new HSDto
