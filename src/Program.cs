@@ -28,7 +28,7 @@ async Task<IResult> Handler(Todo todo, TodoDb db)
     var jsonFoo = JsonSerializer.Serialize(foo);
 
     //return Results.Created($"/todoitems/{todo.Id}", todo);
-    return Results.Created($"/todoitems/{todo.Id}", jsonFoo);
+    return Results.Created($"/todoitems/9", jsonFoo);
 }
 
 app.MapPost("/todoitems", Handler);
