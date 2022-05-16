@@ -56,6 +56,7 @@ async Task<IResult> Handler3(HSDto hsdto)
         sw.WriteLine(hsdto.HSText);
     }
 
+    //
     // call the python script here
     // python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results
     ProcessStartInfo start = new ProcessStartInfo();
