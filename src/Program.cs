@@ -41,12 +41,15 @@ app.MapPost("/hs", Handler3);
 async Task<IResult> Handler3(HSDto hsdto)
 {
     //var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS2" };
+    var foo = new HSDto
+    {
+        Id = hsdto.Id,
+        HSText = hsdto.HSText,
+        Score = hsdto.Score,
+        IsHS = hsdto.IsHS
+    };
 
-    // Decides the IResult implementation
-    // returns a 201 Created
-    //return Results.Created($"/todoitems/{todo.Id}", todo);
-    //return Results.Created($"/hs/9", hsdto);
-    return Results.Json(hsdto);
+    return Results.Json(foo);
 }
 
 
