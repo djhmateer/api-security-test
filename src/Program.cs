@@ -50,7 +50,8 @@ async Task<IResult> Handler3(Todo todo, TodoDb db)
 
     // Decides the IResult implementation
     // returns a 201 Created
-    return Results.Created($"/todoitems/{todo.Id}", todo);
+    //return Results.Created($"/todoitems/{todo.Id}", todo);
+    return Results.Created($"/todoitems/9", foo);
 }
 
 
