@@ -38,24 +38,26 @@ async Task<IResult> Handler2(Todo todo, TodoDb db)
 }
 
 app.MapPost("/hs", Handler3);
-async Task<IResult> Handler3(Todo todo, TodoDb db)
+async Task<IResult> Handler3(HSDto todo)
 {
-    db.Todos.Add(todo);
-    await db.SaveChangesAsync();
-
-    // Newtonsoft.Json
-    // System.Text.Json.Serialization
-
-    var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS" };
+    var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS2" };
 
     // Decides the IResult implementation
     // returns a 201 Created
     //return Results.Created($"/todoitems/{todo.Id}", todo);
-    return Results.Created($"/todoitems/9", foo);
+    return Results.Created($"/hs/9", foo);
 }
 
 
 app.Run();
+
+class HSDto
+{
+    public int Id { get; set; }
+    public string HSText { get; set; }
+    public string? Score { get; set; }
+    public bool IsHS { get; set; }
+}
 
 class Todo
 {
