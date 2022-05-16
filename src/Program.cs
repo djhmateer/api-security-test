@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
@@ -49,14 +50,28 @@ async Task<IResult> Handler3(HSDto hsdto)
     string path = @"/home/dave/hatespeech/temp/input.csv";
 
     // Create a file to write to, or overwrite
-    using (StreamWriter sw = File.CreateText(path))
+    await using (var sw = File.CreateText(path))
     {
         sw.WriteLine("Text");
-        sw.WriteLine(hsdto.HSText + rnd);
+        sw.WriteLine(hsdto.HSText);
     }
 
     // call the python script here
     // python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results
+    ProcessStartInfo start = new ProcessStartInfo();
+    start.FileName = "/usr/bin/python3"; // full path to python
+    //start.Arguments = string.Format("{0} {1}", cmd, args);
+    start.Arguments = "/home/dave/hatespeech/PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results";
+    start.UseShellExecute = false;
+    start.RedirectStandardOutput = true;
+    using (Process process = Process.Start(start))
+    {
+        using (StreamReader reader = process.StandardOutput)
+        {
+            string result = reader.ReadToEnd();
+            Console.Write(result);
+        }
+    }
 
 
 
