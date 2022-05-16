@@ -40,10 +40,12 @@ async Task<IResult> Handler2(Todo todo, TodoDb db)
 app.MapPost("/hs", Handler3);
 async Task<IResult> Handler3(HSDto hsdto)
 {
+    var rnd = new Random().Next(1,10);
+
     //var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS2" };
     var foo = new HSDto
     {
-        Id = hsdto.Id,
+        Id = rnd, //hsdto.Id,
         HSText = hsdto.HSText,
         Score = hsdto.Score,
         IsHS = hsdto.IsHS
