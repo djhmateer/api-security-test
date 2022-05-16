@@ -13,7 +13,7 @@ app.MapGet("/textget", () =>
 app.MapGet("/jsonget", () =>
    // this will serialise the object and returns json by default as is of type T
    // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-6.0#responses
-   new { Message = "hello world from object" }
+   new { Message = "hello world from jsonget" }
 );
 
 
