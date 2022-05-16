@@ -11,7 +11,7 @@ string Handler1()
     var foo = new Todo() { Id = 7, IsComplete = true, Name = "Foo" };
     var jsonFoo = JsonSerializer.Serialize(foo);
     //return jsonFoo;
-    //return "Hello World12";
+    return "Hello World12";
 }
 
 //app.MapGet("/", Handler1);
