@@ -1,3 +1,4 @@
+using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,10 +21,14 @@ async Task<IResult> Handler(Todo todo, TodoDb db)
     db.Todos.Add(todo);
     await db.SaveChangesAsync();
 
-    var foo = "bar";
+    // Newtonsoft.Json
+    // System.Text.Json.Serialization
 
-    return Results.Created($"/todoitems/{todo.Id}", todo);
-    return Results.Created($"/todoitems/{todo.Id}", foo);
+    var foo = "bar";
+    var jsonFoo = JsonSerializer.Serialize(foo);
+
+    //return Results.Created($"/todoitems/{todo.Id}", todo);
+    return Results.Created($"/todoitems/{todo.Id}", jsonFoo);
 }
 
 app.MapPost("/todoitems", Handler);
