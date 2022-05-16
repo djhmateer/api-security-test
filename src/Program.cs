@@ -24,7 +24,7 @@ async Task<IResult> Handler(Todo todo, TodoDb db)
     // Newtonsoft.Json
     // System.Text.Json.Serialization
 
-    var foo = "bar";
+    var foo = new Todo() { Id = 7, IsComplete = true, Name = "Foo" };
     var jsonFoo = JsonSerializer.Serialize(foo);
 
     //return Results.Created($"/todoitems/{todo.Id}", todo);
