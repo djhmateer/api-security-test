@@ -38,14 +38,14 @@ async Task<IResult> Handler2(Todo todo, TodoDb db)
 }
 
 app.MapPost("/hs", Handler3);
-async Task<IResult> Handler3(HSDto todo)
+async Task<IResult> Handler3(HSDto hsdto)
 {
-    var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS2" };
+    //var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS2" };
 
     // Decides the IResult implementation
     // returns a 201 Created
     //return Results.Created($"/todoitems/{todo.Id}", todo);
-    return Results.Created($"/hs/9", foo);
+    return Results.Created($"/hs/9", hsdto);
 }
 
 
