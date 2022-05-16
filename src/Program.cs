@@ -9,7 +9,7 @@ var app = builder.Build();
 
 app.MapGet("/textget", () =>
     // returns a 200
-    "hello from textget"
+    "hello from textget2"
 );
 
 app.MapGet("/jsonget", () =>
