@@ -45,7 +45,8 @@ async Task<IResult> Handler3(HSDto hsdto)
     // Decides the IResult implementation
     // returns a 201 Created
     //return Results.Created($"/todoitems/{todo.Id}", todo);
-    return Results.Created($"/hs/9", hsdto);
+    //return Results.Created($"/hs/9", hsdto);
+    return Results.Json(hsdto);
 }
 
 
