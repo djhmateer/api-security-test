@@ -66,7 +66,10 @@ async Task<IResult> Handler3(HSDto hsdto)
 
     // want to run as dave: sudo -u dave
     //start.Arguments = "/home/dave/hatespeech/PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results";
-    start.Arguments = "/usr/bin/python3 /home/dave/hatespeech/PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results";
+    //start.Arguments = "/usr/bin/python3 /home/dave/hatespeech/PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results";
+    //start.Arguments = string.Format("-c \"sudo {0} {1} {2}\"", "/path/to/script", "arg1", arg2)
+    start.Arguments = "echo 'asdf' > /home/dave/foo.txt";
+
     start.UseShellExecute = false;
     start.RedirectStandardOutput = true;
     using (Process process = Process.Start(start))
