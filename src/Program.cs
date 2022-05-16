@@ -47,14 +47,12 @@ async Task<IResult> Handler3(HSDto hsdto)
     // hatespeech sample text (need to escape commas)
     //string path = @"c:\temp\MyTest.txt";
     string path = @"/home/dave/hatespeech/temp/input.csv";
-    if (!File.Exists(path))
+
+    // Create a file to write to, or overwrite
+    using (StreamWriter sw = File.CreateText(path))
     {
-        // Create a file to write to.
-        using (StreamWriter sw = File.CreateText(path))
-        {
-            sw.WriteLine("Text");
-            sw.WriteLine("hatespeech sample text");
-        }
+        sw.WriteLine("Text");
+        sw.WriteLine(hsdto.HSText + rnd);
     }
 
     // call the python script here
