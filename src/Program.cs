@@ -74,7 +74,7 @@ async Task<IResult> Handler3(HSDto hsdto)
     // this work
     //start.Arguments = "-c ls";
 
-    start.Arguments = "-c whoami";
+    start.Arguments = "-c sudo whoami";
 
     start.UseShellExecute = false;
     start.RedirectStandardOutput = true;
