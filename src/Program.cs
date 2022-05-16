@@ -6,18 +6,12 @@ builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList")
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
-string Handler1()
-{
-    var foo = new Todo() { Id = 7, IsComplete = true, Name = "Foo" };
-    var jsonFoo = JsonSerializer.Serialize(foo);
-    //return jsonFoo;
-    return "Hello World12";
-}
-
-//app.MapGet("/", Handler1);
 app.MapGet("/", () =>
+   // this returns json by default as is of type T
+   // https://docs.microsoft.com/en-us/aspnet/core/fundamentals/minimal-apis?view=aspnetcore-6.0#responses
    new { Message = "hello world from object" }
 );
+
 
 //app.MapPost("/todoitems", async (Todo todo, TodoDb db) =>
 //{
@@ -27,6 +21,7 @@ app.MapGet("/", () =>
 //    return Results.Created($"/todoitems/{todo.Id}", todo);
 //});
 
+app.MapPost("/todoitems", Handler2);
 async Task<IResult> Handler2(Todo todo, TodoDb db)
 {
     db.Todos.Add(todo);
@@ -41,8 +36,6 @@ async Task<IResult> Handler2(Todo todo, TodoDb db)
     return Results.Created($"/todoitems/{todo.Id}", todo);
     return Results.Created($"/todoitems/9", jsonFoo);
 }
-
-app.MapPost("/todoitems", Handler2);
 
 app.Run();
 
