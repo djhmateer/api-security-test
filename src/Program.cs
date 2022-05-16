@@ -37,7 +37,7 @@ async Task<IResult> Handler(Todo todo, TodoDb db)
     var foo = new Todo() { Id = 7, IsComplete = true, Name = "Foo" };
     var jsonFoo = JsonSerializer.Serialize(foo);
 
-    //return Results.Created($"/todoitems/{todo.Id}", todo);
+    return Results.Created($"/todoitems/{todo.Id}", todo);
     return Results.Created($"/todoitems/9", jsonFoo);
 }
 
