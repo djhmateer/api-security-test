@@ -61,7 +61,7 @@ async Task<IResult> Handler3(HSDto hsdto)
     // python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results
     ProcessStartInfo start = new ProcessStartInfo();
     //start.FileName = "/usr/bin/python3"; // full path to python
-    start.FileName = "/home/dave/hatespeech/src/wrapper.sh"; // 
+    start.FileName = "/home/dave/api-security-test/src/wrapper.sh"; // 
     //start.Arguments = string.Format("{0} {1}", cmd, args);
 
     // want to run as dave: sudo -u dave
