@@ -1,4 +1,4 @@
 ﻿#!/bin/bash
 
-ls
+ls -lat
 
