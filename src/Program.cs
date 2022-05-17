@@ -116,7 +116,7 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
 
             hsdto.Text = record.Text;
             hsdto.Score = record.HateScore;
-            hsdto.IsHS = record.Prediction == "contains hate";
+            hsdto.Predication = record.Prediction;
         }
     }
 
@@ -138,7 +138,7 @@ class HSDto
 {
     public string Text { get; set; }
     public string? Score { get; set; }
-    public bool? IsHS { get; set; }
+    public string? Predication { get; set; }
 }
 
 //class Todo
