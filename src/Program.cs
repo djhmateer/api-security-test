@@ -58,15 +58,11 @@ async Task<IResult> Handler2(Todo todo, TodoDb db)
 app.MapPost("/hs", Handler3);
 async Task<IResult> Handler3(HSDto hsdto)
 {
-    var rnd = new Random().Next(1, 10);
-
     // write a text file
     // Text
     // hatespeech sample text (need to escape commas)
-    //string path = @"c:\temp\MyTest.txt";
     string path = @"/home/dave/hatespeech/temp/input.csv";
 
-    // Create a file to write to, or overwrite
     await using (var sw = File.CreateText(path))
     {
         sw.WriteLine("Text");
@@ -76,31 +72,16 @@ async Task<IResult> Handler3(HSDto hsdto)
     //
     // call the python script here
     // python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results
-    ProcessStartInfo start = new ProcessStartInfo();
+    var start = new ProcessStartInfo();
     start.FileName = "bash";
     start.WorkingDirectory = "/home/dave/hatespeech";
-    //start.FileName = "/usr/bin/python3"; // full path to python
-    //start.FileName = "/home/dave/api-security-test/src/wrapper.sh"; // 
-    //start.Arguments = string.Format("{0} {1}", cmd, args);
-
-    // want to run as dave: sudo -u dave
-    //start.Arguments = "/home/dave/hatespeech/PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results";
-    //start.Arguments = "/usr/bin/python3 /home/dave/hatespeech/PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results";
-    //start.Arguments = string.Format("-c \"sudo {0} {1} {2}\"", "/path/to/script", "arg1", arg2)
-    //start.Arguments = "echo 'asdf' > /home/dave/foo.txt";
-
-    // this work
-    //start.Arguments = "-c ls";
-
-    /// www-data
-    //start.Arguments = "-c whoami";
-
-    // works - dave!
-    //start.Arguments = "-c \"sudo -u dave whoami\"";
 
     // works
     //var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn /home/dave/hatespeech/hate_speech_results";
-    var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s /home/dave/hatespeech/temp/input.csv -fn /home/dave/hatespeech/hate_speech_results";
+
+    var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s temp/input.csv -fn hate_speech_results";
+
+    // process running as www-data, but we want to run Python script as dave
     start.Arguments = $"-c \"sudo -u dave {command}\"";
 
     start.UseShellExecute = false;
