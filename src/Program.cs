@@ -1,11 +1,25 @@
 using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+
 
 var builder = WebApplication.CreateBuilder(args);
+
+// remove default logging providers
+builder.Logging.ClearProviders();
+// Serilog configuration        
+var logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateLogger();
+// Register Serilog
+builder.Logging.AddSerilog(logger);
+
 builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
+
+logger.Information("**HELLO");
 
 app.MapGet("/textget", () =>
     // returns a 200
