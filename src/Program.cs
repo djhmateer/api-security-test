@@ -62,6 +62,7 @@ app.MapGet("/jsonget", () =>
 
 
 
+
 app.MapPost("/hs", Handler3);
 async Task<IResult> Handler3(HSDto hsdtoIn)
 {
@@ -117,7 +118,7 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
 
             hsdto.Text = record.Text;
             hsdto.Score = record.HateScore;
-            hsdto.Predication = record.Prediction;
+            hsdto.Prediction = record.Prediction;
         }
     }
 
@@ -139,7 +140,7 @@ class HSDto
 {
     public string Text { get; set; }
     public string? Score { get; set; }
-    public string? Predication { get; set; }
+    public string? Prediction { get; set; }
 }
 
 //class Todo
