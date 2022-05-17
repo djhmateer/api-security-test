@@ -105,7 +105,7 @@ async Task<IResult> Handler3(HSDto hsdto)
         using (StreamReader reader = process.StandardOutput)
         {
             string result = reader.ReadToEnd();
-            logger.Debug(result);
+            logger.Debug($" inside: {result}");
             //Console.Write(result);
         }
     }
