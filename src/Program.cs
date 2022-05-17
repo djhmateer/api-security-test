@@ -79,7 +79,7 @@ async Task<IResult> Handler3(HSDto hsdto)
     // works
     //var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn /home/dave/hatespeech/hate_speech_results";
 
-    var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s temp/input.csv -fn hate_speech_results";
+    var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s temp/input.csv -fn temp/output.csv";
 
     // process running as www-data, but we want to run Python script as dave
     start.Arguments = $"-c \"sudo -u dave {command}\"";
@@ -101,7 +101,6 @@ async Task<IResult> Handler3(HSDto hsdto)
 
 
 
-    //var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS2" };
     var foo = new HSDto
     {
         Id = 9, //hsdto.Id,
