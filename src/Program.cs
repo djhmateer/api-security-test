@@ -61,6 +61,7 @@ app.MapGet("/jsonget", () =>
 
 
 
+
 app.MapPost("/hs", Handler3);
 async Task<IResult> Handler3(HSDto hsdtoIn)
 {
