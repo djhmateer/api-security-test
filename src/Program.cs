@@ -11,9 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 // Serilog configuration        
 var logger = new LoggerConfiguration()
-    .MinimumLevel.Debug()
+    .MinimumLevel.Information()
     .WriteTo.Console()
-    .WriteTo.File("logs/debug.log")
+    .WriteTo.File("logs/information.log")
     .CreateLogger();
 // Register Serilog
 builder.Logging.AddSerilog(logger);
@@ -22,7 +22,7 @@ builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList")
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
-logger.Debug("****Starting API");
+logger.Information("****Starting API");
 
 app.MapGet("/textget", () =>
     // returns a 200
@@ -102,17 +102,17 @@ async Task<IResult> Handler3(HSDto hsdto)
 
     start.UseShellExecute = false;
     start.RedirectStandardOutput = true;
-    logger.Debug(" Starting Python");
+    logger.Information(" Starting Python");
     using (Process process = Process.Start(start))
     {
         using (StreamReader reader = process.StandardOutput)
         {
             string result = reader.ReadToEnd();
-            logger.Debug($" inside: {result}");
+            logger.Information($" inside: {result}");
             //Console.Write(result);
         }
     }
-    logger.Debug(" Ending Python");
+    logger.Information(" Ending Python");
 
 
 
