@@ -77,7 +77,9 @@ async Task<IResult> Handler3(HSDto hsdto)
     /// www-data
     //start.Arguments = "-c whoami";
 
-    start.Arguments = "-c \"sudo -u dave whoami\"";
+    // works - dave!
+    //start.Arguments = "-c \"sudo -u dave whoami\"";
+    start.Arguments = "-c 'sudo -u dave whoami'";
 
     start.UseShellExecute = false;
     start.RedirectStandardOutput = true;
