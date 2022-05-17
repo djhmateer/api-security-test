@@ -19,7 +19,7 @@ builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList")
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
-logger.Information("**HELLO");
+logger.Warning("**HELLO");
 
 app.MapGet("/textget", () =>
     // returns a 200
