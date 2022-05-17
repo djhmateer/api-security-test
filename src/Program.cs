@@ -2,6 +2,7 @@ using System.Diagnostics;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
+using Serilog.Events;
 
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,7 +12,7 @@ builder.Logging.ClearProviders();
 // Serilog configuration        
 var logger = new LoggerConfiguration()
     .WriteTo.Console()
-    .WriteTo.File("logs/info.txt", rollingInterval: RollingInterval.Day)
+    .WriteTo.File("logs/debug.txt", restrictedToMinimumLevel: LogEventLevel.Debug)
     .CreateLogger();
 // Register Serilog
 builder.Logging.AddSerilog(logger);
