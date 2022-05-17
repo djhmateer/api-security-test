@@ -78,8 +78,10 @@ async Task<IResult> Handler3(HSDto hsdto)
     //start.Arguments = "-c whoami";
 
     // works - dave!
-    start.Arguments = "-c \"sudo -u dave whoami\"";
-    //start.Arguments = "-c 'sudo -u dave whoami'";
+    //start.Arguments = "-c \"sudo -u dave whoami\"";
+
+    var command = "/usr/bin/python3 /home/dave/hatespeech/PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results";
+    start.Arguments = $"-c \"sudo -u dave {command}\"";
 
     start.UseShellExecute = false;
     start.RedirectStandardOutput = true;
