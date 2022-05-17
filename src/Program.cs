@@ -20,7 +20,7 @@ builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList")
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
-logger.Warning("**HELLO");
+logger.Debug("Starting API");
 
 app.MapGet("/textget", () =>
     // returns a 200
@@ -105,7 +105,8 @@ async Task<IResult> Handler3(HSDto hsdto)
         using (StreamReader reader = process.StandardOutput)
         {
             string result = reader.ReadToEnd();
-            Console.Write(result);
+            logger.Debug(result);
+            //Console.Write(result);
         }
     }
 
