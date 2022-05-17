@@ -61,7 +61,6 @@ app.MapGet("/jsonget", () =>
 app.MapPost("/hs", Handler3);
 async Task<IResult> Handler3(HSDto hsdtoIn)
 {
-
     // csv helper to write inbound hsdto to a csv
     var recordsToWrite = new List<HSDto>();
     recordsToWrite.Add(hsdtoIn);
@@ -72,26 +71,11 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
         csv.WriteRecords(recordsToWrite);
     }
 
-
-    // write a text file
-    // Text
-    // hatespeech sample text (need to escape commas)
-
-    //await using (var sw = File.CreateText(path))
-    //{
-    //    sw.WriteLine("Text");
-    //    sw.WriteLine(hsdtoIn.Text);
-    //}
-
-    //
-    // call the python script here
+    // call the python script
     // python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results
     var start = new ProcessStartInfo();
     start.FileName = "bash";
     start.WorkingDirectory = "/home/dave/hatespeech";
-
-    // works
-    //var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn /home/dave/hatespeech/hate_speech_results";
 
     var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s temp/input.csv -fn temp/output";
 
@@ -101,6 +85,7 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
     start.UseShellExecute = false;
     start.RedirectStandardOutput = true;
     start.RedirectStandardError = true;
+
     logger.Information(" Starting Python");
     using (Process process = Process.Start(start))
     {
@@ -150,7 +135,7 @@ class HSDto
 {
     public string Text { get; set; }
     public string? Score { get; set; }
-    public bool IsHS { get; set; }
+    public bool? IsHS { get; set; }
 }
 
 //class Todo
