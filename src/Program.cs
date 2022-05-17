@@ -21,7 +21,7 @@ var logger = new LoggerConfiguration()
 // Register Serilog
 builder.Logging.AddSerilog(logger);
 
-builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
+//builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
@@ -42,35 +42,46 @@ app.MapGet("/jsonget", () =>
 // https://docs.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-6.0&tabs=visual-studio
 // accepts a POST
 // and will deserialise a Todo item
-app.MapPost("/todoitems", Handler2);
-async Task<IResult> Handler2(Todo todo, TodoDb db)
-{
-    db.Todos.Add(todo);
-    await db.SaveChangesAsync();
+//app.MapPost("/todoitems", Handler2);
+//async Task<IResult> Handler2(Todo todo, TodoDb db)
+//{
+//    db.Todos.Add(todo);
+//    await db.SaveChangesAsync();
 
-    // Newtonsoft.Json
-    // System.Text.Json.Serialization
+//    // Newtonsoft.Json
+//    // System.Text.Json.Serialization
 
-    var foo = new Todo() { Id = 7, IsComplete = true, Name = "Foo" };
+//    var foo = new Todo() { Id = 7, IsComplete = true, Name = "PythonDTO" };
 
-    // Decides the IResult implementation
-    // returns a 201 Created
-    return Results.Created($"/todoitems/{todo.Id}", todo);
-}
+//    // Decides the IResult implementation
+//    // returns a 201 Created
+//    return Results.Created($"/todoitems/{todo.Id}", todo);
+//}
 
 app.MapPost("/hs", Handler3);
-async Task<IResult> Handler3(HSDto hsdto)
+async Task<IResult> Handler3(HSDto hsdtoIn)
 {
+
+    // csv helper to write inbound hsdto to a csv
+    var recordsToWrite = new List<HSDto>();
+    recordsToWrite.Add(hsdtoIn);
+
+    using (var writer = new StreamWriter("/home/dave/hatespeech/temp/input.csv"))
+    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+    {
+        csv.WriteRecords(recordsToWrite);
+    }
+
+
     // write a text file
     // Text
     // hatespeech sample text (need to escape commas)
-    string path = @"/home/dave/hatespeech/temp/input.csv";
 
-    await using (var sw = File.CreateText(path))
-    {
-        sw.WriteLine("Text");
-        sw.WriteLine(hsdto.HSText);
-    }
+    //await using (var sw = File.CreateText(path))
+    //{
+    //    sw.WriteLine("Text");
+    //    sw.WriteLine(hsdtoIn.Text);
+    //}
 
     //
     // call the python script here
@@ -102,40 +113,32 @@ async Task<IResult> Handler3(HSDto hsdto)
     }
     logger.Information(" Ending Python");
 
-    var foo = new HSDto
-    {
-        HSText = hsdto.HSText,
-        Score = hsdto.Score,
-        IsHS = hsdto.IsHS
-    };
+    var hsdto = new HSDto { };
 
     // read temp/output.csv
     using (var reader = new StreamReader("/home/dave/hatespeech/temp/output.csv"))
     using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
     {
-        var records = csv.GetRecords<Foo>();
+        var records = csv.GetRecords<PythonDTO>();
         foreach (var record in records)
         {
             logger.Information($"record Text: {record.Text} ");
             logger.Information($"record Predi: {record.Prediction} ");
             logger.Information($"record HS: {record.HateScore} ");
 
-            foo.HSText = record.Text;
-            foo.Score = record.HateScore;
-            foo.IsHS = record.Prediction == "contains hate";
+            hsdto.Text = record.Text;
+            hsdto.Score = record.HateScore;
+            hsdto.IsHS = record.Prediction == "contains hate";
         }
     }
 
-    // return as json
-
-
-    return Results.Json(foo);
+    return Results.Json(hsdto);
 }
 
 
 app.Run();
 
-class Foo
+class PythonDTO
 {
     public string Text { get; set; }
     public string Prediction { get; set; }
@@ -145,25 +148,25 @@ class Foo
 
 class HSDto
 {
-    public string HSText { get; set; }
+    public string Text { get; set; }
     public string? Score { get; set; }
     public bool IsHS { get; set; }
 }
 
-class Todo
-{
-    public int Id { get; set; }
-    public string? Name { get; set; }
-    public bool IsComplete { get; set; }
-}
+//class Todo
+//{
+//    public int Id { get; set; }
+//    public string? Name { get; set; }
+//    public bool IsComplete { get; set; }
+//}
 
-class TodoDb : DbContext
-{
-    public TodoDb(DbContextOptions<TodoDb> options)
-        : base(options) { }
+//class TodoDb : DbContext
+//{
+//    public TodoDb(DbContextOptions<TodoDb> options)
+//        : base(options) { }
 
-    public DbSet<Todo> Todos => Set<Todo>();
-}
+//    public DbSet<Todo> Todos => Set<Todo>();
+//}
 
 
 
