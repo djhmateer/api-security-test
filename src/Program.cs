@@ -105,11 +105,11 @@ async Task<IResult> Handler3(HSDto hsdto)
     logger.Information(" Starting Python");
     using (Process process = Process.Start(start))
     {
-        using (StreamReader reader = process.StandardOutput)
+        //using (StreamReader reader = process.StandardOutput)
+        using (StreamReader reader = process.StandardError)
         {
             string result = reader.ReadToEnd();
             logger.Information($" inside: {result}");
-            //Console.Write(result);
         }
     }
     logger.Information(" Ending Python");
