@@ -21,7 +21,7 @@ builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList")
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
-logger.Warning("****Starting API");
+logger.Debug("****Starting API");
 
 app.MapGet("/textget", () =>
     // returns a 200
