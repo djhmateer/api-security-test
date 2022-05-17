@@ -1,5 +1,8 @@
 using System.Diagnostics;
+using System.Globalization;
 using System.Text.Json;
+using CsvHelper;
+using CsvHelper.Configuration.Attributes;
 using Microsoft.EntityFrameworkCore;
 using Serilog;
 using Serilog.Events;
@@ -99,6 +102,20 @@ async Task<IResult> Handler3(HSDto hsdto)
     }
     logger.Information(" Ending Python");
 
+    // read temp/output.csv
+    using (var reader = new StreamReader("/home/dave/hatespeech/temp/output.csv"))
+    using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+    {
+        var records = csv.GetRecords<Foo>();
+        foreach (var record in records)
+        {
+            logger.Information($"record Text: {record.Text} ");
+            logger.Information($"record Predi: {record.Prediction} ");
+            logger.Information($"record HS: {record.HateScore} ");
+        }
+    }
+
+    // return as json
 
 
     var foo = new HSDto
@@ -114,6 +131,14 @@ async Task<IResult> Handler3(HSDto hsdto)
 
 
 app.Run();
+
+class Foo
+{
+    public string Text { get; set; }
+    public string Prediction { get; set; }
+    [Name("Hate score")]
+    public string HateScore { get; set; }
+}
 
 class HSDto
 {
