@@ -121,12 +121,9 @@ async Task<IResult> Handler3(HSDto hsdto)
             logger.Information($"record Predi: {record.Prediction} ");
             logger.Information($"record HS: {record.HateScore} ");
 
-            foo.Id = 3;
             foo.HSText = record.Text;
             foo.Score = record.HateScore;
-            var bar = false;
-            if (record.Prediction == "contains hate") bar = true;
-            foo.IsHS = bar;
+            foo.IsHS = record.Prediction == "contains hate";
         }
     }
 
@@ -149,7 +146,6 @@ class Foo
 
 class HSDto
 {
-    public int Id { get; set; }
     public string HSText { get; set; }
     public string? Score { get; set; }
     public bool IsHS { get; set; }
