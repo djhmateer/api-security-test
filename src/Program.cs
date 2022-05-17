@@ -102,6 +102,7 @@ async Task<IResult> Handler3(HSDto hsdto)
 
     start.UseShellExecute = false;
     start.RedirectStandardOutput = true;
+    start.RedirectStandardError = true;
     logger.Information(" Starting Python");
     using (Process process = Process.Start(start))
     {
