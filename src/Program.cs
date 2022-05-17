@@ -11,6 +11,7 @@ builder.Logging.ClearProviders();
 // Serilog configuration        
 var logger = new LoggerConfiguration()
     .WriteTo.Console()
+    .WriteTo.File("logs/info.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 // Register Serilog
 builder.Logging.AddSerilog(logger);
