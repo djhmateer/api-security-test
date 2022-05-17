@@ -100,6 +100,7 @@ async Task<IResult> Handler3(HSDto hsdto)
 
     start.UseShellExecute = false;
     start.RedirectStandardOutput = true;
+    logger.Debug(" Starting Python");
     using (Process process = Process.Start(start))
     {
         using (StreamReader reader = process.StandardOutput)
@@ -109,6 +110,7 @@ async Task<IResult> Handler3(HSDto hsdto)
             //Console.Write(result);
         }
     }
+    logger.Debug(" Ending Python");
 
 
 
