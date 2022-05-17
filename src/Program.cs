@@ -11,8 +11,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Logging.ClearProviders();
 // Serilog configuration        
 var logger = new LoggerConfiguration()
+    .MinimumLevel.Debug()
     .WriteTo.Console()
-    .WriteTo.File("logs/debug.txt", restrictedToMinimumLevel: LogEventLevel.Debug)
+    .WriteTo.File("logs/debug.log")
     .CreateLogger();
 // Register Serilog
 builder.Logging.AddSerilog(logger);
