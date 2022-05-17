@@ -104,7 +104,7 @@ async Task<IResult> Handler3(HSDto hsdto)
     //var foo = new Todo() { Id = 9, IsComplete = true, Name = "From HS2" };
     var foo = new HSDto
     {
-        Id = rnd, //hsdto.Id,
+        Id = 9, //hsdto.Id,
         HSText = hsdto.HSText,
         Score = hsdto.Score,
         IsHS = hsdto.IsHS
