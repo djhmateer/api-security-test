@@ -104,7 +104,6 @@ async Task<IResult> Handler3(HSDto hsdto)
 
     var foo = new HSDto
     {
-        Id = 9, //hsdto.Id,
         HSText = hsdto.HSText,
         Score = hsdto.Score,
         IsHS = hsdto.IsHS
