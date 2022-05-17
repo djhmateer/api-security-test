@@ -102,6 +102,14 @@ async Task<IResult> Handler3(HSDto hsdto)
     }
     logger.Information(" Ending Python");
 
+    var foo = new HSDto
+    {
+        Id = 9, //hsdto.Id,
+        HSText = hsdto.HSText,
+        Score = hsdto.Score,
+        IsHS = hsdto.IsHS
+    };
+
     // read temp/output.csv
     using (var reader = new StreamReader("/home/dave/hatespeech/temp/output.csv"))
     using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
@@ -112,19 +120,18 @@ async Task<IResult> Handler3(HSDto hsdto)
             logger.Information($"record Text: {record.Text} ");
             logger.Information($"record Predi: {record.Prediction} ");
             logger.Information($"record HS: {record.HateScore} ");
+
+            foo.Id = 3;
+            foo.HSText = record.Text;
+            foo.Score = record.HateScore;
+            var bar = false;
+            if (record.Prediction == "contains hate") bar = true;
+            foo.IsHS = bar;
         }
     }
 
     // return as json
 
-
-    var foo = new HSDto
-    {
-        Id = 9, //hsdto.Id,
-        HSText = hsdto.HSText,
-        Score = hsdto.Score,
-        IsHS = hsdto.IsHS
-    };
 
     return Results.Json(foo);
 }
