@@ -32,26 +32,6 @@ app.MapGet("/jsonget", () =>
    new { Message = "hello world from jsonget" }
 );
 
-
-// https://docs.microsoft.com/en-us/aspnet/core/tutorials/min-web-api?view=aspnetcore-6.0&tabs=visual-studio
-// accepts a POST
-// and will deserialise a Todo item
-//app.MapPost("/todoitems", Handler2);
-//async Task<IResult> Handler2(Todo todo, TodoDb db)
-//{
-//    db.Todos.Add(todo);
-//    await db.SaveChangesAsync();
-
-//    // Newtonsoft.Json
-//    // System.Text.Json.Serialization
-
-//    var foo = new Todo() { Id = 7, IsComplete = true, Name = "PythonDTO" };
-
-//    // Decides the IResult implementation
-//    // returns a 201 Created
-//    return Results.Created($"/todoitems/{todo.Id}", todo);
-//}
-
 app.MapPost("/hs", Handler3);
 async Task<IResult> Handler3(HSDto hsdtoIn)
 {
