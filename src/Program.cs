@@ -39,7 +39,8 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
     var recordsToWrite = new List<HSDto>();
     recordsToWrite.Add(hsdtoIn);
 
-    using (var writer = new StreamWriter("/home/dave/hatespeech/temp/input.csv"))
+    //using (var writer = new StreamWriter("/home/dave/hatespeech/temp/input.csv"))
+    using (var writer = new StreamWriter("/home/dave/hatespeech/002.csv"))
     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
     {
         csv.WriteRecords(recordsToWrite);
@@ -47,49 +48,53 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
 
     // call the python script
     // python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results
-    var start = new ProcessStartInfo();
-    start.FileName = "bash";
-    start.WorkingDirectory = "/home/dave/hatespeech";
+    //var start = new ProcessStartInfo();
+    //start.FileName = "bash";
+    //start.WorkingDirectory = "/home/dave/hatespeech";
 
-    var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s temp/input.csv -fn temp/output";
+    //var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s temp/input.csv -fn temp/output";
 
-    // process running as www-data, but we want to run Python script as dave
-    start.Arguments = $"-c \"sudo -u dave {command}\"";
+    //// process running as www-data, but we want to run Python script as dave
+    //start.Arguments = $"-c \"sudo -u dave {command}\"";
 
-    start.UseShellExecute = false;
-    start.RedirectStandardOutput = true;
-    start.RedirectStandardError = true;
+    //start.UseShellExecute = false;
+    //start.RedirectStandardOutput = true;
+    //start.RedirectStandardError = true;
 
-    logger.Information(" Starting Python");
-    using (Process process = Process.Start(start))
-    {
-        //using (StreamReader reader = process.StandardOutput)
-        using (StreamReader reader = process.StandardError)
-        {
-            string result = reader.ReadToEnd();
-            logger.Information($" inside: {result}");
-        }
-    }
-    logger.Information(" Ending Python");
+    //logger.Information(" Starting Python");
+    //using (Process process = Process.Start(start))
+    //{
+    //    //using (StreamReader reader = process.StandardOutput)
+    //    using (StreamReader reader = process.StandardError)
+    //    {
+    //        string result = reader.ReadToEnd();
+    //        logger.Information($" inside: {result}");
+    //    }
+    //}
+    //logger.Information(" Ending Python");
+
+
+    // **HERE**
+    // poll the output directory
 
     var hsdto = new HSDto { };
 
-    // read temp/output.csv
-    using (var reader = new StreamReader("/home/dave/hatespeech/temp/output.csv"))
-    using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-    {
-        var records = csv.GetRecords<PythonDTO>();
-        foreach (var record in records)
-        {
-            logger.Information($"record Text: {record.Text} ");
-            logger.Information($"record Predi: {record.Prediction} ");
-            logger.Information($"record HS: {record.HateScore} ");
+    //// read temp/output.csv
+    //using (var reader = new StreamReader("/home/dave/hatespeech/temp/output.csv"))
+    //using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+    //{
+    //    var records = csv.GetRecords<PythonDTO>();
+    //    foreach (var record in records)
+    //    {
+    //        logger.Information($"record Text: {record.Text} ");
+    //        logger.Information($"record Predi: {record.Prediction} ");
+    //        logger.Information($"record HS: {record.HateScore} ");
 
-            hsdto.Text = record.Text;
-            hsdto.Score = record.HateScore;
-            hsdto.Prediction = record.Prediction;
-        }
-    }
+    //        hsdto.Text = record.Text;
+    //        hsdto.Score = record.HateScore;
+    //        hsdto.Prediction = record.Prediction;
+    //    }
+    //}
 
     return Results.Json(hsdto);
 }
