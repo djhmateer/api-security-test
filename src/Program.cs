@@ -79,7 +79,6 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
     //logger.Information(" Ending Python");
 
 
-    // **HERE**
     // poll the output directory
     var outputFile = $"{path}/output/{guid}.csv";
     while (true)
@@ -110,7 +109,7 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
         else
         {
             logger.Information($"Waiting for {outputFile}");
-            Thread.Sleep(200);
+            Thread.Sleep(100);
         }
 }
 
