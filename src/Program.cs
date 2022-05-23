@@ -44,7 +44,8 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
 
     //using (var writer = new StreamWriter("/home/dave/hatespeech/temp/input.csv"))
     //using (var writer = new StreamWriter("/home/dave/hatespeech/input/002.csv"))
-    using (var writer = new StreamWriter($"/home/dave/hatespeech/input/{guid}.csv"))
+    var path = "/home/dave/hatespeech";
+    using (var writer = new StreamWriter($"{path}/input/{guid}.csv"))
     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
     {
         csv.WriteRecords(recordsToWrite);
@@ -80,27 +81,37 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
 
     // **HERE**
     // poll the output directory
+    var outputFile = $"{path}/output/{guid}.csv";
+    while (true)
+        if (File.Exists(outputFile))
+        {
+            var hsdto = new HSDto { };
 
-    var hsdto = new HSDto { };
+            using (var reader = new StreamReader(outputFile))
+            using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
+            {
+                var records = csv.GetRecords<PythonDTO>();
+                foreach (var record in records)
+                {
+                    logger.Information($"record Text: {record.Text} ");
+                    logger.Information($"record Predi: {record.Prediction} ");
+                    logger.Information($"record HS: {record.HateScore} ");
 
-    //// read temp/output.csv
-    //using (var reader = new StreamReader("/home/dave/hatespeech/temp/output.csv"))
-    //using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
-    //{
-    //    var records = csv.GetRecords<PythonDTO>();
-    //    foreach (var record in records)
-    //    {
-    //        logger.Information($"record Text: {record.Text} ");
-    //        logger.Information($"record Predi: {record.Prediction} ");
-    //        logger.Information($"record HS: {record.HateScore} ");
+                    hsdto.Text = record.Text;
+                    hsdto.Score = record.HateScore;
+                    hsdto.Prediction = record.Prediction;
+                }
+            }
 
-    //        hsdto.Text = record.Text;
-    //        hsdto.Score = record.HateScore;
-    //        hsdto.Prediction = record.Prediction;
-    //    }
-    //}
-
-    return Results.Json(hsdto);
+            // clean up
+            File.Delete(outputFile);
+            return Results.Json(hsdto);
+        }
+        else
+        {
+            logger.Information($"Waiting for {outputFile}");
+            Thread.Sleep(500);
+        }
 }
 
 
