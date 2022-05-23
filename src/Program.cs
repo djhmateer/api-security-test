@@ -1,28 +1,22 @@
 using System.Diagnostics;
 using System.Globalization;
-using System.Text.Json;
 using CsvHelper;
 using CsvHelper.Configuration.Attributes;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
-using Serilog.Events;
-
 
 var builder = WebApplication.CreateBuilder(args);
 
 // remove default logging providers
 builder.Logging.ClearProviders();
-// Serilog configuration        
+
 var logger = new LoggerConfiguration()
     .MinimumLevel.Information()
     .WriteTo.Console()
     .WriteTo.File("logs/information.log")
     .CreateLogger();
-// Register Serilog
+
 builder.Logging.AddSerilog(logger);
 
-//builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
-builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 var app = builder.Build();
 
 logger.Information("****Starting API");
@@ -57,11 +51,6 @@ app.MapGet("/jsonget", () =>
 //    // returns a 201 Created
 //    return Results.Created($"/todoitems/{todo.Id}", todo);
 //}
-
-
-
-
-
 
 app.MapPost("/hs", Handler3);
 async Task<IResult> Handler3(HSDto hsdtoIn)
