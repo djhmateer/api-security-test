@@ -39,8 +39,12 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
     var recordsToWrite = new List<HSDto>();
     recordsToWrite.Add(hsdtoIn);
 
+
+    var guid = Guid.NewGuid();
+
     //using (var writer = new StreamWriter("/home/dave/hatespeech/temp/input.csv"))
-    using (var writer = new StreamWriter("/home/dave/hatespeech/input/002.csv"))
+    //using (var writer = new StreamWriter("/home/dave/hatespeech/input/002.csv"))
+    using (var writer = new StreamWriter($"/home/dave/hatespeech/input/{guid}.csv"))
     using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
     {
         csv.WriteRecords(recordsToWrite);
