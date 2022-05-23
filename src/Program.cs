@@ -110,7 +110,7 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
         else
         {
             logger.Information($"Waiting for {outputFile}");
-            Thread.Sleep(500);
+            Thread.Sleep(200);
         }
 }
 
