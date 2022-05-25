@@ -1,4 +1,3 @@
-using System.Diagnostics;
 using System.Globalization;
 using CsvHelper;
 using CsvHelper.Configuration.Attributes;
@@ -6,7 +5,6 @@ using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// remove default logging providers
 builder.Logging.ClearProviders();
 
 var logger = new LoggerConfiguration()
@@ -21,8 +19,8 @@ var app = builder.Build();
 
 logger.Information("****Starting API");
 
+// returns text
 app.MapGet("/textget", () =>
-    // returns a 200
     "hello from textget2"
 );
 
@@ -39,62 +37,33 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
     var recordsToWrite = new List<HSDto>();
     recordsToWrite.Add(hsdtoIn);
 
-
     var guid = Guid.NewGuid();
 
-    //using (var writer = new StreamWriter("/home/dave/hatespeech/temp/input.csv"))
-    //using (var writer = new StreamWriter("/home/dave/hatespeech/input/002.csv"))
     var path = "/home/dave/hatespeech";
-    using (var writer = new StreamWriter($"{path}/input/{guid}.csv"))
-    using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
+    await using (var writer = new StreamWriter($"{path}/input/{guid}.csv"))
+    await using (var csv = new CsvWriter(writer, CultureInfo.InvariantCulture))
     {
         csv.WriteRecords(recordsToWrite);
     }
 
-    // call the python script
-    // python3 PreBERT.py -m xlm-roberta-base -d all_train -s TE1.csv -fn hate_speech_results
-    //var start = new ProcessStartInfo();
-    //start.FileName = "bash";
-    //start.WorkingDirectory = "/home/dave/hatespeech";
-
-    //var command = "python3 PreBERT.py -m xlm-roberta-base -d all_train -s temp/input.csv -fn temp/output";
-
-    //// process running as www-data, but we want to run Python script as dave
-    //start.Arguments = $"-c \"sudo -u dave {command}\"";
-
-    //start.UseShellExecute = false;
-    //start.RedirectStandardOutput = true;
-    //start.RedirectStandardError = true;
-
-    //logger.Information(" Starting Python");
-    //using (Process process = Process.Start(start))
-    //{
-    //    //using (StreamReader reader = process.StandardOutput)
-    //    using (StreamReader reader = process.StandardError)
-    //    {
-    //        string result = reader.ReadToEnd();
-    //        logger.Information($" inside: {result}");
-    //    }
-    //}
-    //logger.Information(" Ending Python");
-
-
     // poll the output directory
     var outputFile = $"{path}/output/{guid}.csv";
     while (true)
+    {
         if (File.Exists(outputFile))
         {
-            var hsdto = new HSDto { };
+            var hsdto = new HSDto();
 
+            // found output file, convert to json object
             using (var reader = new StreamReader(outputFile))
             using (var csv = new CsvReader(reader, CultureInfo.InvariantCulture))
             {
                 var records = csv.GetRecords<PythonDTO>();
                 foreach (var record in records)
                 {
-                    logger.Information($"record Text: {record.Text} ");
-                    logger.Information($"record Predi: {record.Prediction} ");
-                    logger.Information($"record HS: {record.HateScore} ");
+                    logger.Information($"Text: {record.Text} ");
+                    logger.Information($"Prediction: {record.Prediction} ");
+                    logger.Information($"Score: {record.HateScore} ");
 
                     hsdto.Text = record.Text;
                     hsdto.Score = record.HateScore;
@@ -106,13 +75,10 @@ async Task<IResult> Handler3(HSDto hsdtoIn)
             File.Delete(outputFile);
             return Results.Json(hsdto);
         }
-        else
-        {
-            //logger.Information($"Waiting for {outputFile}");
-            Thread.Sleep(100);
-        }
-}
 
+        await Task.Delay(100);
+    }
+}
 
 app.Run();
 
